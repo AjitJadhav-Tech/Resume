@@ -1,0 +1,41 @@
+---
+import { profile } from '../data/profile';
+
+const pillars = [
+  { title: 'Architect', text: 'Multi-agent designs with supervisors, planners and tool gateways that hold up in production.' },
+  { title: 'Ground', text: 'Advanced RAG with hybrid search and reranking so answers stay accurate and cited.' },
+  { title: 'Secure', text: 'Guardrails, PII protection, IAM, KMS and WAF designed in from day one.' },
+  { title: 'Operate', text: 'Tracing, evaluation and cost-aware routing with OpenTelemetry, Langfuse and LiteLLM.' },
+];
+---
+
+<section id="about" class="section">
+  <div class="container layout">
+    <div class="reveal">
+      <div class="eyebrow">About</div>
+      <h2 class="section-title">Building the harness that makes <span class="grad-text">AI agents reliable</span>.</h2>
+      {profile.about.map((p) => <p class="para">{p}</p>)}
+    </div>
+    <div class="pillars">
+      {pillars.map((p, i) => (
+        <div class="card hoverable pillar reveal" style={`transition-delay:${i * 0.08}s`}>
+          <span class="num">0{i + 1}</span>
+          <h3>{p.title}</h3>
+          <p>{p.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .layout { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+  .para { color: var(--muted); font-size: 1.04rem; }
+  .pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pillar { padding: 24px; }
+  .pillar h3 { font-size: 1.12rem; margin: 10px 0 8px; }
+  .pillar p { color: var(--muted); font-size: 0.92rem; margin: 0; }
+  .num { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; gap: 40px; } }
+  @media (max-width: 480px) { .pillars { grid-template-columns: 1fr; } }
+</style>
