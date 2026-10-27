@@ -1,0 +1,140 @@
+---
+import { profile } from '../data/profile';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const links = [
+  { href: `${base}#about`, label: 'About' },
+  { href: `${base}#skills`, label: 'Skills' },
+  { href: `${base}#projects`, label: 'Projects' },
+  { href: `${base}#experience`, label: 'Experience' },
+  { href: `${base}#contact`, label: 'Contact' },
+];
+---
+
+<nav id="nav" aria-label="Primary">
+  <div class="container inner">
+    <a href={base} class="brand" aria-label={`${profile.name}, home`}>
+      <span class="logo">AJ</span>
+      <span class="brand-name">{profile.name}</span>
+    </a>
+
+    <ul class="links" id="nav-links">
+      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      <li class="mobile-only"><a href={`${base}${profile.resumePdf}`} download>Resume PDF</a></li>
+    </ul>
+
+    <div class="actions">
+      <button class="icon-btn" id="theme-toggle" aria-label="Toggle colour theme">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+      <a class="btn btn-primary resume-btn" href={`${base}${profile.resumePdf}`} download>Resume</a>
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const nav = document.getElementById('nav')!;
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 12);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  document.getElementById('theme-toggle')!.addEventListener('click', () => {
+    const root = document.documentElement;
+    const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+
+  const menuBtn = document.getElementById('menu-btn')!;
+  const links = document.getElementById('nav-links')!;
+  menuBtn.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', String(open));
+  });
+  links.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => {
+      links.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }),
+  );
+</script>
+
+<style>
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+    border-bottom: 1px solid transparent;
+  }
+  nav.scrolled {
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom-color: var(--border);
+  }
+  .inner { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; }
+  .logo {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--grad);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    letter-spacing: -0.04em;
+  }
+  .links { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
+  .links a { padding: 8px 14px; border-radius: 999px; color: var(--muted); font-size: 0.93rem; font-weight: 500; transition: color 0.2s, background 0.2s; }
+  .links a:hover { color: var(--text); background: var(--surface-2); }
+  .mobile-only { display: none; }
+  .actions { display: flex; align-items: center; gap: 10px; }
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .icon-btn svg { width: 18px; height: 18px; }
+  :global([data-theme='light']) .sun { display: none; }
+  :global(:root:not([data-theme='light'])) .moon { display: none; }
+  .resume-btn { padding: 9px 18px; }
+  .menu-btn { display: none; }
+
+  @media (max-width: 880px) {
+    .brand-name { display: none; }
+    .menu-btn { display: grid; }
+    .resume-btn { display: none; }
+    .mobile-only { display: block; }
+    .links {
+      position: absolute;
+      top: 72px;
+      left: 16px;
+      right: 16px;
+      flex-direction: column;
+      padding: 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .links.open { opacity: 1; pointer-events: auto; transform: none; }
+    .links a { display: block; padding: 12px 14px; }
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+import { openSource, profile } from '../data/profile';
+---
+
+<section id="open-source" class="section">
+  <div class="container">
+    <div class="reveal head">
+      <div>
+        <div class="eyebrow">Open source & labs</div>
+        <h2 class="section-title">Building in <span class="grad-text">public</span>.</h2>
+        <p class="section-lead">Reference implementations and experiments on GitHub.</p>
+      </div>
+      <a class="btn" href={profile.github} target="_blank" rel="noopener">All repositories ↗</a>
+    </div>
+    <div class="grid">
+      {openSource.map((r, i) => (
+        <a class="card hoverable repo reveal" href={r.url} target="_blank" rel="noopener" style={`transition-delay:${(i % 3) * 0.06}s`}>
+          <div class="title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/></svg>
+            <span>{r.name}</span>
+          </div>
+          <p>{r.desc}</p>
+          <div class="chips">{r.tags.map((t) => <span class="chip">{t}</span>)}</div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .head { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; margin-bottom: 52px; }
+  .head .section-lead { margin-bottom: 0; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .repo { padding: 22px; display: flex; flex-direction: column; }
+  .title { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; font-size: 0.95rem; word-break: break-word; }
+  .title svg { flex: none; width: 18px; height: 18px; color: var(--accent); margin-top: 2px; }
+  p { color: var(--muted); font-size: 0.9rem; margin: 10px 0 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+  @media (max-width: 960px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+</style>

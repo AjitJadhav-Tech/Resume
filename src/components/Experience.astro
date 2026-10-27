@@ -1,0 +1,73 @@
+---
+import { experience, credentials } from '../data/profile';
+---
+
+<section id="experience" class="section">
+  <div class="container layout">
+    <div>
+      <div class="reveal">
+        <div class="eyebrow">Experience</div>
+        <h2 class="section-title">From data platforms to <span class="grad-text">agentic AI</span>.</h2>
+      </div>
+      <ol class="timeline">
+        {experience.map((e) => (
+          <li class="reveal">
+            <span class="marker" aria-hidden="true"></span>
+            <div class="period">{e.period}</div>
+            <h3>{e.title}</h3>
+            <div class="company">{e.company}</div>
+            <ul>{e.points.map((p) => <li>{p}</li>)}</ul>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <aside class="side">
+      <div class="card block reveal">
+        <div class="eyebrow">Certification</div>
+        {credentials.certifications.map((c) => (
+          <div class="cred">
+            <span class="badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg>
+            </span>
+            <div><strong>{c.name}</strong><span>{c.issuer}</span></div>
+          </div>
+        ))}
+      </div>
+      <div class="card block reveal">
+        <div class="eyebrow">Education</div>
+        {credentials.education.map((c) => (
+          <div class="cred">
+            <span class="badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/></svg>
+            </span>
+            <div><strong>{c.name}</strong><span>{c.issuer} · {c.year}</span></div>
+          </div>
+        ))}
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .layout { display: grid; grid-template-columns: 1.6fr 1fr; gap: 56px; align-items: start; }
+  .timeline { list-style: none; margin: 40px 0 0; padding: 0 0 0 28px; position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--accent-1), var(--accent-2), transparent); border-radius: 2px; }
+  .timeline > li { position: relative; padding-bottom: 36px; }
+  .marker { position: absolute; left: -28px; top: 5px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent-2); box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.12); }
+  .period { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); margin-bottom: 6px; }
+  h3 { font-size: 1.2rem; }
+  .company { color: var(--muted); font-weight: 500; margin: 2px 0 10px; }
+  ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 0.95rem; }
+  ul li { margin-bottom: 4px; }
+  .side { display: flex; flex-direction: column; gap: 18px; position: sticky; top: 96px; }
+  .block { padding: 24px; }
+  .block .eyebrow { margin-bottom: 14px; }
+  .cred { display: flex; gap: 14px; align-items: center; }
+  .cred + .cred { margin-top: 14px; }
+  .badge { flex: none; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(34, 211, 238, 0.14)); color: var(--accent); }
+  .badge svg { width: 22px; height: 22px; }
+  .cred strong { display: block; font-size: 0.98rem; }
+  .cred span { color: var(--faint); font-size: 0.85rem; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; gap: 24px; } .side { position: static; } }
+</style>

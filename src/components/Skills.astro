@@ -1,0 +1,96 @@
+---
+import { competencies } from '../data/profile';
+
+const icons: Record<string, string> = {
+  agent: '<circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M12 7.5v4M12 11.5l-5.5 4.5M12 11.5l5.5 4.5"/>',
+  spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
+  model: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9zM9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/>',
+  cloud: '<path d="M7 18a5 5 0 0 1-.9-9.9A6 6 0 0 1 17.7 9 4.5 4.5 0 0 1 17 18z"/>',
+};
+---
+
+<section id="skills" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="eyebrow">Core competencies</div>
+      <h2 class="section-title">The full stack of <span class="grad-text">applied AI</span>.</h2>
+      <p class="section-lead">From model internals to cloud architecture. Type to filter the skills.</p>
+    </div>
+
+    <div class="filter reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="skill-filter" type="search" placeholder="Try “RAG”, “LangGraph” or “Bedrock”" aria-label="Filter skills" />
+    </div>
+
+    <div class="grid">
+      {competencies.map((c, i) => (
+        <div class="card hoverable group reveal" style={`transition-delay:${i * 0.08}s`}>
+          <div class="head">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={icons[c.icon]} /></span>
+            <div>
+              <h3>{c.title}</h3>
+              <p>{c.blurb}</p>
+            </div>
+          </div>
+          <div class="chips">
+            {c.skills.map((s) => <span class="chip skill">{s}</span>)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('skill-filter') as HTMLInputElement;
+  const skills = document.querySelectorAll<HTMLElement>('.skill');
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    skills.forEach((s) => {
+      const hit = q && s.textContent!.toLowerCase().includes(q);
+      s.classList.toggle('hit', !!hit);
+      s.classList.toggle('dim', !!q && !hit);
+    });
+  });
+</script>
+
+<style>
+  .filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 420px;
+    padding: 0 16px;
+    margin: -24px 0 32px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--faint);
+  }
+  .filter svg { width: 18px; height: 18px; flex: none; }
+  .filter input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--text); font: inherit; padding: 12px 0; outline: none; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .group { padding: 28px; }
+  .head { display: flex; gap: 16px; margin-bottom: 20px; }
+  .icon {
+    flex: none;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(34, 211, 238, 0.12));
+    border: 1px solid var(--border);
+    color: var(--accent);
+  }
+  .icon svg { width: 24px; height: 24px; }
+  h3 { font-size: 1.15rem; margin-bottom: 4px; }
+  .head p { color: var(--muted); font-size: 0.9rem; margin: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill { transition: opacity 0.2s, color 0.2s, border-color 0.2s, background 0.2s; }
+  .skill:hover { color: var(--text); border-color: rgba(139, 92, 246, 0.5); }
+  .skill.hit { color: #fff; background: var(--grad); border-color: transparent; }
+  .skill.dim { opacity: 0.3; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } .group { padding: 22px; } }
+  @media (max-width: 420px) { .chip { white-space: normal; } }
+</style>

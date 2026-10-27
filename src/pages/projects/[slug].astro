@@ -1,0 +1,118 @@
+---
+import Base from '../../layouts/Base.astro';
+import Architecture from '../../components/Architecture.astro';
+import { projects, profile, type Project } from '../../data/profile';
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { project: p, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+const { project: p, next } = Astro.props as { project: Project; next: Project };
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<Base title={`${p.name}: ${p.subtitle} | ${profile.name}`} description={p.summary}>
+  <article>
+    <header class="hero">
+      <div class="container">
+        <a class="back" href={`${base}#projects`}>← All projects</a>
+        <div class="eyebrow reveal">{p.client}</div>
+        <h1 class="reveal">{p.name}</h1>
+        <p class="subtitle grad-text reveal">{p.subtitle}</p>
+        <p class="summary reveal">{p.summary}</p>
+        <dl class="facts reveal">
+          <div><dt>Role</dt><dd>{p.role}</dd></div>
+          <div><dt>Timeline</dt><dd>{p.period}</dd></div>
+          <div><dt>Client</dt><dd>{p.client} <span class="conf">(confidential)</span></dd></div>
+        </dl>
+      </div>
+    </header>
+
+    <section class="container block">
+      <div class="results card reveal">
+        {p.results.map((r) => (
+          <div><strong class="grad-text">{r.value}</strong><span>{r.label}</span></div>
+        ))}
+      </div>
+    </section>
+
+    <section class="container block two">
+      <div class="reveal">
+        <div class="eyebrow">The challenge</div>
+        <p class="lead">{p.problem}</p>
+      </div>
+      <div class="reveal">
+        <div class="eyebrow">What I built</div>
+        <ol class="steps">{p.approach.map((a) => <li>{a}</li>)}</ol>
+      </div>
+    </section>
+
+    <section class="container block">
+      <div class="eyebrow reveal">Architecture</div>
+      <h2 class="h2 reveal">How the system fits together</h2>
+      <div class="card diagram">
+        <Architecture stages={p.architecture} />
+      </div>
+    </section>
+
+    <section class="container block">
+      <div class="eyebrow reveal">Tech stack</div>
+      <div class="chips reveal">{p.stack.map((s) => <span class="chip">{s}</span>)}</div>
+    </section>
+
+    <section class="container block">
+      <a class="card hoverable next reveal" href={`${base}projects/${next.slug}/`}>
+        <span class="eyebrow">Next case study</span>
+        <span class="next-name">{next.name} <span class="arrow">→</span></span>
+        <span class="next-sub">{next.subtitle}</span>
+      </a>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .hero { padding: 140px 0 40px; }
+  .back { display: block; width: fit-content; color: var(--muted); font-size: 0.9rem; margin-bottom: 36px; }
+  .back:hover { color: var(--text); }
+  h1 { font-size: clamp(2.8rem, 8vw, 5rem); font-weight: 800; letter-spacing: -0.04em; }
+  .subtitle { font-size: clamp(1.2rem, 2.6vw, 1.6rem); font-weight: 600; margin: 8px 0 20px; }
+  .summary { color: var(--muted); font-size: 1.1rem; max-width: 760px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 14px 40px; margin: 32px 0 0; }
+  .facts dt { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+  .facts dd { margin: 4px 0 0; font-weight: 500; }
+  .conf { color: var(--faint); font-weight: 400; font-size: 0.85rem; }
+  .block { padding-top: 40px; padding-bottom: 40px; }
+  .results { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 24px; padding: 28px; }
+  .results div { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .results strong { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em; }
+  .results span { color: var(--muted); font-size: 0.86rem; }
+  .two { display: grid; grid-template-columns: 1fr 1.3fr; gap: 56px; }
+  .lead { font-size: 1.12rem; color: var(--muted); }
+  .steps { margin: 0; padding: 0; list-style: none; counter-reset: s; }
+  .steps li { counter-increment: s; position: relative; padding: 0 0 18px 46px; color: var(--muted); }
+  .steps li::before {
+    content: counter(s, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2px 6px;
+  }
+  .h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 24px; }
+  .diagram { padding: 24px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .next { display: flex; flex-direction: column; padding: 32px; }
+  .next .eyebrow { margin-bottom: 8px; }
+  .next-name { font-size: 1.8rem; font-weight: 800; }
+  .next-sub { color: var(--muted); }
+  .arrow { display: inline-block; transition: transform 0.25s; }
+  .next:hover .arrow { transform: translateX(6px); }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; gap: 32px; } .hero { padding-top: 110px; } .diagram { padding: 16px; } }
+</style>
