@@ -11,6 +11,7 @@ export const profile = {
   linkedin: 'https://www.linkedin.com/in/ai-ajitjadhav',
   github: 'https://github.com/AjitJadhav-Tech',
   resumePdf: 'Ajit-Jadhav-Resume.pdf',
+  photo: 'ajit-jadhav', // public/ajit-jadhav{,-avatar}.{webp,jpg}
   about: [
     'I am a Generative AI Engineer with 4.5 years of experience building AI and cloud systems that run in production, not just in notebooks. My focus is agentic AI: the harness around the model that makes it reliable, including planning loops, tool gateways, memory, guardrails, evaluation and observability.',
     'I have delivered multi-agent platforms for enterprise clients in the automotive and manufacturing space on AWS Bedrock and AgentCore, with measurable gains in cost, accuracy and latency. My background in big data and infrastructure means I think about the whole system, from GPU clusters to the user-facing response.',
